@@ -69,62 +69,35 @@ export const Contact: React.FC = () => {
     const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
     const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
+    if (!serviceId || !templateId || !publicKey) {
+      setIsSubmitting(false);
+      setErrorMessage(
+        'EmailJS configuration missing: Please set VITE_EMAILJS_PUBLIC_KEY in your .env file.'
+      );
+      return;
+    }
+
     try {
-      if (serviceId && templateId && publicKey) {
-        // Send via EmailJS
-        await emailjs.send(
-          serviceId,
-          templateId,
-          {
-            name: formData.name.trim(),
-            from_name: formData.name.trim(),
-            email: formData.email.trim(),
-            reply_to: formData.email.trim(),
-            subject: formData.subject.trim() || 'Portfolio Inquiry',
-            message: formData.message.trim(),
-            to_name: PORTFOLIO_DATA.name,
-          },
-          publicKey
-        );
-        setSubmitted(true);
-      } else {
-        // Fallback to FormSubmit so emails deliver directly to joraldsevilla69@gmail.com
-        const response = await fetch(`https://formsubmit.co/ajax/${PORTFOLIO_DATA.email}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
-          body: JSON.stringify({
-            name: formData.name.trim(),
-            email: formData.email.trim(),
-            subject: formData.subject.trim() || 'Portfolio Inquiry',
-            message: formData.message.trim(),
-            _subject: `Portfolio Message from ${formData.name}: ${formData.subject || 'Inquiry'}`,
-            _template: 'box',
-            _captcha: 'false',
-          }),
-        });
-
-        const data = await response.json();
-
-        if (response.ok && (data.success === 'true' || data.success === true || data.message)) {
-          setSubmitted(true);
-        } else {
-          setErrorMessage(
-            typeof data.message === 'string'
-              ? data.message
-              : 'Could not deliver the message. Please try again or email directly.'
-          );
-        }
-      }
+      await emailjs.send(
+        serviceId,
+        templateId,
+        {
+          name: formData.name.trim(),
+          from_name: formData.name.trim(),
+          email: formData.email.trim(),
+          reply_to: formData.email.trim(),
+          subject: formData.subject.trim() || 'Portfolio Inquiry',
+          message: formData.message.trim(),
+          to_name: PORTFOLIO_DATA.name,
+        },
+        publicKey
+      );
+      setSubmitted(true);
     } catch (err: unknown) {
       console.error('Contact form submission error:', err);
       const errDetail = err && typeof err === 'object' && 'text' in err ? String(err.text) : '';
       setErrorMessage(
-        errDetail ||
-          'Unable to send message. Please verify your internet connection or email directly at ' +
-            PORTFOLIO_DATA.email
+        errDetail || 'Failed to send message via EmailJS. Please verify your EmailJS keys or try again.'
       );
     } finally {
       setIsSubmitting(false);
