@@ -47,7 +47,7 @@ export const Contact: React.FC = () => {
     setTimeout(() => setCopiedEmail(false), 2000);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Basic validation
@@ -62,12 +62,46 @@ export const Contact: React.FC = () => {
     }
 
     setIsSubmitting(true);
+    setErrorMessage(null);
 
-    // Simulate polished client-side processing
-    setTimeout(() => {
+    try {
+      const response = await fetch(`https://formsubmit.co/ajax/${PORTFOLIO_DATA.email}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          subject: formData.subject.trim() || 'Portfolio Inquiry',
+          message: formData.message.trim(),
+          _subject: `Portfolio Message from ${formData.name}: ${formData.subject || 'Inquiry'}`,
+          _template: 'box',
+          _captcha: 'false',
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && (data.success === 'true' || data.success === true || data.message)) {
+        setSubmitted(true);
+      } else {
+        setErrorMessage(
+          typeof data.message === 'string'
+            ? data.message
+            : 'Could not deliver the message. Please try again or email directly.'
+        );
+      }
+    } catch (err) {
+      console.error('Contact form submission error:', err);
+      setErrorMessage(
+        'Unable to send message directly. Please verify your internet connection or email directly at ' +
+          PORTFOLIO_DATA.email
+      );
+    } finally {
       setIsSubmitting(false);
-      setSubmitted(true);
-    }, 800);
+    }
   };
 
   const handleReset = () => {
@@ -190,61 +224,32 @@ export const Contact: React.FC = () => {
               </p>
 
               {submitted ? (
-                <div className="p-6 rounded-xl bg-slate-900/90 border border-emerald-500/30 text-left space-y-4 animate-fade-in">
-                  <div className="flex items-center gap-2.5 text-emerald-400">
-                    <CheckCircle className="w-6 h-6" />
-                    <h4 className="text-base font-semibold text-white">
-                      Message Drafted Successfully!
-                    </h4>
+                <div className="p-6 sm:p-8 rounded-xl bg-slate-900/90 border border-emerald-500/30 text-left space-y-4 animate-fade-in">
+                  <div className="flex items-center gap-3 text-emerald-400">
+                    <div className="p-2 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                      <CheckCircle className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-bold text-white">
+                        Message Sent Successfully!
+                      </h4>
+                      <p className="text-xs text-slate-400 font-mono">
+                        Sent to {PORTFOLIO_DATA.email}
+                      </p>
+                    </div>
                   </div>
                   <p className="text-sm text-slate-300 leading-relaxed">
-                    Thank you, <span className="font-semibold text-indigo-300">{formData.name}</span>. Your message regarding &ldquo;{formData.subject || 'Portfolio Inquiry'}&rdquo; has been previewed.
+                    Thank you, <span className="font-semibold text-indigo-300">{formData.name}</span>. Your message regarding &ldquo;{formData.subject || 'Portfolio Inquiry'}&rdquo; has been sent directly to Jorald. I&apos;ll get back to you as soon as possible.
                   </p>
-                  
-                  {/* Backend integration hint for developer */}
-                  <div className="p-3 rounded-lg bg-indigo-950/50 border border-indigo-500/20 text-xs font-mono text-slate-300 space-y-1">
-                    <span className="text-indigo-300 font-semibold block">Developer Notice:</span>
-                    <span>
-                      Ready to connect this form to an email service? You can easily plug in{' '}
-                      <a
-                        href="https://formspree.io"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-cyan-400 underline"
-                      >
-                        Formspree
-                      </a>{' '}
-                      or{' '}
-                      <a
-                        href="https://www.emailjs.com"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-cyan-400 underline"
-                      >
-                        EmailJS
-                      </a>{' '}
-                      in <code className="bg-black/40 px-1 py-0.5 rounded">src/components/Contact.tsx</code>.
-                    </span>
-                  </div>
 
-                  <div className="flex items-center gap-3 pt-2">
-                    <a
-                      href={`mailto:${PORTFOLIO_DATA.email}?subject=${encodeURIComponent(
-                        formData.subject || 'Portfolio Inquiry'
-                      )}&body=${encodeURIComponent(
-                        `From: ${formData.name} (${formData.email})\n\n${formData.message}`
-                      )}`}
-                      className="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white transition-colors inline-flex items-center gap-1.5"
-                    >
-                      <Mail className="w-3.5 h-3.5" />
-                      <span>Send via Email Client</span>
-                    </a>
+                  <div className="pt-2">
                     <button
                       type="button"
                       onClick={handleReset}
-                      className="px-4 py-2 rounded-lg bg-white/[0.05] hover:bg-white/[0.1] text-xs font-mono text-slate-300 hover:text-white transition-colors"
+                      className="px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white transition-colors inline-flex items-center gap-2 shadow-md shadow-indigo-600/20"
                     >
-                      Reset Form
+                      <Send className="w-3.5 h-3.5" />
+                      <span>Send Another Message</span>
                     </button>
                   </div>
                 </div>
@@ -342,7 +347,7 @@ export const Contact: React.FC = () => {
                     {isSubmitting ? (
                       <>
                         <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        <span>Processing...</span>
+                        <span>Sending Message...</span>
                       </>
                     ) : (
                       <>
