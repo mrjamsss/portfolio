@@ -1,5 +1,5 @@
 import React from 'react';
-import { Briefcase, Users, Calendar, CheckCircle2, FileCode } from 'lucide-react';
+import { Briefcase, Users, Calendar, CheckCircle2 } from 'lucide-react';
 import { PORTFOLIO_DATA } from '../data/portfolioData';
 import { ScrollReveal } from './ScrollReveal';
 
@@ -74,18 +74,6 @@ export const Experience: React.FC = () => {
             );
           })}
 
-          {/* Customization helper hint for the user */}
-          <ScrollReveal direction="up" delay={150}>
-            <div className="p-4 rounded-xl bg-slate-900/40 border border-dashed border-white/[0.1] text-xs font-mono text-slate-400 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <FileCode className="w-4 h-4 text-indigo-400" />
-                <span>Need to add an internship or new student org?</span>
-              </div>
-              <span className="text-indigo-400 hidden sm:inline">
-                Edit src/data/portfolioData.ts
-              </span>
-            </div>
-          </ScrollReveal>
         </div>
       </div>
     </section>

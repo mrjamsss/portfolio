@@ -78,13 +78,6 @@ export const Skills: React.FC = () => {
             ))}
           </ScrollReveal>
         </div>
-
-        {/* Subtle bottom helper label */}
-        <ScrollReveal direction="up" delay={200} className="mt-16 text-center">
-          <span className="text-xs font-mono text-slate-500 bg-slate-900/60 border border-white/[0.06] px-3 py-1.5 rounded-full">
-            ✦ Interactive 3D low-poly faceted tech showcase
-          </span>
-        </ScrollReveal>
       </div>
     </section>
   );

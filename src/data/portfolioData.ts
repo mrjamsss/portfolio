@@ -13,7 +13,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
 export const PORTFOLIO_DATA: DeveloperProfile = {
   name: 'Jorald Allen M. Sevilla',
   displayName: 'Jorald',
-  nickname: 'Mojow Sevilla',
+  nickname: 'mrjamsss',
   role: 'Web Systems Technology Student & Aspiring Full-Stack Developer',
   studentStatus: '4th Year College Student',
   specialization: 'Web Systems Technology',

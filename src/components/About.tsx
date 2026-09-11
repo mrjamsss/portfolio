@@ -2,7 +2,6 @@ import React from 'react';
 import {
   GraduationCap,
   Layers,
-  CheckCircle2,
   Code2,
   Server,
   Database,
@@ -62,13 +61,6 @@ export const About: React.FC = () => {
                   );
                 })}
               </div>
-            </div>
-
-            <div className="flex items-center gap-3 text-xs font-mono text-slate-400">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-              <span>
-                Based at {PORTFOLIO_DATA.institution} ({PORTFOLIO_DATA.college})
-              </span>
             </div>
           </ScrollReveal>
 
