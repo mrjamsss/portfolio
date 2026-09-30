@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useLenis } from 'lenis/react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { About } from './components/About';
@@ -9,33 +10,27 @@ import { Experience } from './components/Experience';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 
+const SECTIONS = ['home', 'about', 'skills', 'projects', 'education', 'experience', 'contact'];
+
 export const App: React.FC = () => {
   const [activeSection, setActiveSection] = useState<string>('home');
 
-  useEffect(() => {
-    const sections = ['home', 'about', 'skills', 'projects', 'education', 'experience', 'contact'];
+  // Track active section smoothly via Lenis scroll updates
+  useLenis((lenis) => {
+    const scrollPosition = lenis.scroll + 200;
 
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY + 200;
-
-      for (const sectionId of sections) {
-        const element = document.getElementById(sectionId);
-        if (element) {
-          const top = element.offsetTop;
-          const height = element.offsetHeight;
-          if (scrollPosition >= top && scrollPosition < top + height) {
-            setActiveSection(sectionId);
-            break;
-          }
+    for (const sectionId of SECTIONS) {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        const top = element.offsetTop;
+        const height = element.offsetHeight;
+        if (scrollPosition >= top && scrollPosition < top + height) {
+          setActiveSection(sectionId);
+          break;
         }
       }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Initial check
-
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    }
+  });
 
   return (
     <div className="min-h-screen bg-[#090d16] text-slate-300 flex flex-col selection:bg-indigo-500/30 selection:text-indigo-200">

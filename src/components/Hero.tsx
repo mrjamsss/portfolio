@@ -1,14 +1,21 @@
 import { ArrowDown, Mail, FolderGit2 } from 'lucide-react';
+import { useLenis } from 'lenis/react';
 import { PORTFOLIO_DATA } from '../data/portfolioData';
 import { TerminalCard } from './TerminalCard';
-import { FacebookIcon, GithubIcon } from './Icons';
+import { FacebookIcon, GithubIcon, LinkedinIcon } from './Icons';
 import { ScrollReveal } from './ScrollReveal';
 
 export const Hero: React.FC = () => {
+  const lenis = useLenis();
+
   const scrollToSection = (href: string) => {
-    const el = document.querySelector(href);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
+    if (lenis) {
+      lenis.scrollTo(href, { offset: -70, duration: 1.2 });
+    } else {
+      const el = document.querySelector(href);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 
@@ -77,6 +84,8 @@ export const Hero: React.FC = () => {
                       ? FacebookIcon
                       : social.platform === 'github'
                       ? GithubIcon
+                      : social.platform === 'linkedin'
+                      ? LinkedinIcon
                       : Mail;
                   return (
                     <a

@@ -76,6 +76,12 @@ export const PORTFOLIO_DATA: DeveloperProfile = {
       handle: '@mrjamsss',
     },
     {
+      platform: 'linkedin',
+      label: 'LinkedIn',
+      url: 'https://www.linkedin.com/in/jorald-allen-sevilla-7535a43a1/',
+      handle: 'Jorald Allen Sevilla',
+    },
+    {
       platform: 'email',
       label: 'Email',
       url: 'mailto:joraldsevilla69@gmail.com',

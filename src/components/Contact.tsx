@@ -11,7 +11,7 @@ import {
   MessageSquare,
 } from 'lucide-react';
 import { PORTFOLIO_DATA } from '../data/portfolioData';
-import { FacebookIcon, GithubIcon } from './Icons';
+import { FacebookIcon, GithubIcon, LinkedinIcon } from './Icons';
 import { ScrollReveal } from './ScrollReveal';
 
 interface FormState {
@@ -182,6 +182,8 @@ export const Contact: React.FC = () => {
                         ? FacebookIcon
                         : social.platform === 'github'
                         ? GithubIcon
+                        : social.platform === 'linkedin'
+                        ? LinkedinIcon
                         : Mail;
                     return (
                       <a

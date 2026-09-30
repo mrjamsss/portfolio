@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Menu, X, Terminal, ArrowUpRight } from 'lucide-react';
+import { Menu, X, ArrowUpRight } from 'lucide-react';
+import { useLenis } from 'lenis/react';
 import { NAV_ITEMS, PORTFOLIO_DATA } from '../data/portfolioData';
+import logoNoBg from '../assets/JA_Logo-FF-nobg.png';
 
 interface NavbarProps {
   activeSection: string;
@@ -8,12 +10,17 @@ interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({ activeSection }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const lenis = useLenis();
 
   const handleLinkClick = (href: string) => {
     setMobileMenuOpen(false);
-    const target = document.querySelector(href);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' });
+    if (lenis) {
+      lenis.scrollTo(href, { offset: -70, duration: 1.2 });
+    } else {
+      const target = document.querySelector(href);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 
@@ -28,13 +35,17 @@ export const Navbar: React.FC<NavbarProps> = ({ activeSection }) => {
               e.preventDefault();
               handleLinkClick('#home');
             }}
-            className="flex items-center gap-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg p-1"
+            className="flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg p-1 group"
           >
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-cyan-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
-              <Terminal className="w-4 h-4 text-white" />
+            <div className="w-10 h-10 rounded-xl overflow-hidden border border-white/10 bg-slate-900/70 backdrop-blur-sm p-1 shadow-md shadow-indigo-500/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105 group-hover:border-indigo-400/50 group-hover:shadow-indigo-500/25">
+              <img
+                src={logoNoBg}
+                alt={`${PORTFOLIO_DATA.displayName} Logo`}
+                className="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(99,102,241,0.25)] transition-transform duration-200 group-hover:drop-shadow-[0_0_12px_rgba(99,102,241,0.5)]"
+              />
             </div>
             <div className="flex flex-col text-left">
-              <span className="text-base font-semibold text-white tracking-tight flex items-center gap-1.5">
+              <span className="text-base font-semibold text-white tracking-tight flex items-center gap-1.5 group-hover:text-indigo-300 transition-colors">
                 {PORTFOLIO_DATA.displayName}
                 <span className="text-indigo-400 font-mono text-xs">.dev</span>
               </span>

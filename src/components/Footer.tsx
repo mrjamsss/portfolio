@@ -1,11 +1,19 @@
 import React from 'react';
-import { ArrowUp, Mail, Heart, Code2 } from 'lucide-react';
+import { ArrowUp, Mail, Heart } from 'lucide-react';
+import { useLenis } from 'lenis/react';
 import { PORTFOLIO_DATA } from '../data/portfolioData';
-import { FacebookIcon, GithubIcon } from './Icons';
+import { FacebookIcon, GithubIcon, LinkedinIcon } from './Icons';
+import logoNoBg from '../assets/JA_Logo-FF-nobg.png';
 
 export const Footer: React.FC = () => {
+  const lenis = useLenis();
+
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (lenis) {
+      lenis.scrollTo(0, { duration: 1.2 });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   return (
@@ -13,12 +21,20 @@ export const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Brand and Description */}
-          <div className="flex flex-col items-center md:items-start space-y-1">
-            <span className="text-base font-bold text-white font-mono flex items-center gap-1.5">
-              <Code2 className="w-4 h-4 text-indigo-400" />
-              <span>{PORTFOLIO_DATA.nickname}</span>
-              <span className="text-slate-500 font-sans text-xs">({PORTFOLIO_DATA.name})</span>
-            </span>
+          <div className="flex flex-col items-center md:items-start space-y-1.5">
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-lg overflow-hidden bg-slate-900/80 p-0.5 border border-white/10 shadow-sm flex items-center justify-center">
+                <img
+                  src={logoNoBg}
+                  alt={`${PORTFOLIO_DATA.nickname} Logo`}
+                  className="w-full h-full object-contain filter drop-shadow-[0_0_4px_rgba(99,102,241,0.25)]"
+                />
+              </div>
+              <span className="text-base font-bold text-white font-mono flex items-center gap-1.5">
+                <span>{PORTFOLIO_DATA.nickname}</span>
+                <span className="text-slate-500 font-sans text-xs">({PORTFOLIO_DATA.name})</span>
+              </span>
+            </div>
             <p className="text-xs text-slate-400">
               Designed &amp; Built with React, TypeScript &amp; Tailwind CSS
             </p>
@@ -32,6 +48,8 @@ export const Footer: React.FC = () => {
                   ? FacebookIcon
                   : social.platform === 'github'
                   ? GithubIcon
+                  : social.platform === 'linkedin'
+                  ? LinkedinIcon
                   : Mail;
               return (
                 <a
