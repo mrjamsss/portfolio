@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useLenis } from 'lenis/react';
+import { Analytics } from '@vercel/analytics/react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { About } from './components/About';
@@ -34,6 +35,9 @@ export const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#090d16] text-slate-300 flex flex-col selection:bg-indigo-500/30 selection:text-indigo-200">
+      {/* Vercel Web Analytics */}
+      <Analytics />
+
       {/* Sticky Top Navbar with Active Section Highlighting */}
       <Navbar activeSection={activeSection} />
 
